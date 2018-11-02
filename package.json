@@ -1,0 +1,24 @@
+{
+  "name": "restserver",
+  "version": "1.0.0",
+  "description": "rest server con nodejs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeyvaLT/rest-server-node.git"
+  },
+  "keywords": [
+    "rest",
+    "server",
+    "node"
+  ],
+  "author": "Ele-L",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeyvaLT/rest-server-node/issues"
+  },
+  "homepage": "https://github.com/LeyvaLT/rest-server-node#readme"
+}
