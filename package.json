@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/LeyvaLT/rest-server-node/issues"
   },
-  "homepage": "https://github.com/LeyvaLT/rest-server-node#readme"
+  "homepage": "https://github.com/LeyvaLT/rest-server-node#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
 }
