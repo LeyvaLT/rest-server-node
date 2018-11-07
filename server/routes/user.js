@@ -9,7 +9,7 @@ app.get('/user', (req, res) => {
     let start = req.query.start || 0
     let limit = req.query.limit || 5
 
-    User.find({})
+    User.find({ status: true }, 'name email role status google img')
         .skip(Number(start))
         .limit(Number(limit))
         .exec((error, users) => {
@@ -19,7 +19,7 @@ app.get('/user', (req, res) => {
                     error
                 })
             }
-            User.count({}, (error, count) => {
+            User.count({ status: true }, (error, count) => {
                 res.json({
                     ok:true,
                     count,
@@ -73,13 +73,54 @@ app.put('/user/:id', (req, res) => {
     })
 })
 
-app.delete('/user', (req, res) => {
+/*
+app.delete('/user/:id', (req, res) => {
 
-    res.json({
-        ok: true,
-        message: 'delete usuario'
+    let id = req.params.id
+    User.findByIdAndRemove(id,{}, (error, user) => {
+        if(error){
+            res.status(400).json({
+                ok:false,
+                error
+            })
+        }
+
+        if(!user){
+            res.status(400).json({
+                ok:false,
+                error: {
+                    message: 'usuario no encontrado'
+                }
+            })
+        }
+
+        res.json({
+            ok: true,
+            usuario: user
+        })
     })
 
+})
+*/
+app.delete('/user/:id', (req, res) => {
+
+    let id = req.params.id 
+    let body = _.pick(req.body, ['name', 'email', 'img', 'role'])
+
+    User.findByIdAndUpdate(id, {$set: {"status": false } }, { new: true, runValidators: true }, (error, userDB) => {
+
+        if(error){
+            res.status(400).json({
+                ok:false,
+                error
+            })
+        }
+
+        res.json({
+            ok: true,
+            user: userDB
+        })
+    })
 })
 
 app.get('/', (req, res) => {

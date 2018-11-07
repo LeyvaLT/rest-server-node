@@ -22,7 +22,7 @@ app.use(bodyParser.json())
 
 // MongoDB Connect
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost:27017/cafe',{ useNewUrlParser: true } , (error, response)=> {
+mongoose.connect(process.env.URLDB,{ useNewUrlParser: true } , (error, response)=> {
     if(error) throw error
     console.log('BD Online')
 })
