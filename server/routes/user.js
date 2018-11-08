@@ -1,10 +1,12 @@
 const express = require('express')
-const app = express()
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 const User = require('../models/user')
+const {verifyToken, verifyAdminRole} = require('../middlewares/auth')
 
-app.get('/user', (req, res) => {
+const app = express()
+
+app.get('/user',verifyToken, (req, res) => {
 
     let start = req.query.start || 0
     let limit = req.query.limit || 5
@@ -14,13 +16,13 @@ app.get('/user', (req, res) => {
         .limit(Number(limit))
         .exec((error, users) => {
             if(error){
-                res.status(400).json({
+                return res.status(400).json({
                     ok:false,
                     error
                 })
             }
             User.count({ status: true }, (error, count) => {
-                res.json({
+                return res.json({
                     ok:true,
                     count,
                     users
@@ -29,7 +31,8 @@ app.get('/user', (req, res) => {
         })
 })
 
-app.post('/user', (req, res) => {
+app.post('/user', [verifyToken, verifyAdminRole], (req, res) => {
+    
     let body = req.body
     let user = new User({
         name: body.name,
@@ -39,12 +42,12 @@ app.post('/user', (req, res) => {
     })
     user.save((error, userDB) => {
         if(error){
-            res.status(400).json({
+            return res.status(400).json({
                 ok:false,
                 error
             })
         }
-        res.json({
+        return res.json({
             ok: true,
             user: userDB
         })
@@ -52,7 +55,7 @@ app.post('/user', (req, res) => {
     })
 })
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
 
     let id = req.params.id 
     let body = _.pick(req.body, ['name', 'email', 'img', 'role'])
@@ -60,49 +63,20 @@ app.put('/user/:id', (req, res) => {
     User.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (error, userDB) => {
 
         if(error){
-            res.status(400).json({
+            return res.status(400).json({
                 ok:false,
                 error
             })
         }
 
-        res.json({
+        return res.json({
             ok: true,
             user: userDB
         })
     })
 })
 
-/*
-app.delete('/user/:id', (req, res) => {
-
-    let id = req.params.id
-    User.findByIdAndRemove(id,{}, (error, user) => {
-        if(error){
-            res.status(400).json({
-                ok:false,
-                error
-            })
-        }
-
-        if(!user){
-            res.status(400).json({
-                ok:false,
-                error: {
-                    message: 'usuario no encontrado'
-                }
-            })
-        }
-
-        res.json({
-            ok: true,
-            usuario: user
-        })
-    })
-
-})
-*/
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
 
     let id = req.params.id 
     let body = _.pick(req.body, ['name', 'email', 'img', 'role'])
@@ -110,13 +84,13 @@ app.delete('/user/:id', (req, res) => {
     User.findByIdAndUpdate(id, {$set: {"status": false } }, { new: true, runValidators: true }, (error, userDB) => {
 
         if(error){
-            res.status(400).json({
+            return res.status(400).json({
                 ok:false,
                 error
             })
         }
 
-        res.json({
+        return res.json({
             ok: true,
             user: userDB
         })

@@ -1,6 +1,11 @@
 // server port
 process.env.PORT = process.env.PORT || 3000
 
+
+// token expires
+process.env.TOKEN_EXPIRES = 60 * 60 * 24 * 30
+// seed Auth
+process.env.SEED = process.env.SEED || 'ancnasgdtweocnasdhgtpcmaiuqe89s87654'
 // enviroment
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 
