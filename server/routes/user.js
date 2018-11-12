@@ -97,8 +97,4 @@ app.delete('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     })
 })
 
-app.get('/', (req, res) => {
-    res.send('Hola Mundo')
-})
-
 module.exports = app
